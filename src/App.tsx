@@ -11,7 +11,7 @@ import {
   signInWithPhoneNumber,
 } from "firebase/auth";
 
-import { Button, Input } from "antd";
+import { Button, Form, Input, InputNumber } from "antd";
 import firebaseConfig from "./firebase";
 
 // Initialize Firebase outside the component
@@ -27,6 +27,28 @@ function App() {
     null
   );
   const [code, setCode] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (value > 5) return;
+    const timer = setTimeout(() => {
+      setValue(value + 1);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [value]);
+
+  const onFinish = () => {
+    const provider = new GoogleAuthProvider();
+
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   const generateOtp = useCallback(async () => {
     try {
       if (!appVerifier) {
@@ -53,24 +75,9 @@ function App() {
     confirmationResult
       ?.confirm(code)
       .then((result: any) => {
-        // User signed in successfully.
         console.log(result.user);
-        // ...
       })
       .catch((error: any) => {
-        // User couldn't sign in (bad verification code?)
-        // ...
-        console.log(error);
-      });
-  };
-  const onFinish = () => {
-    const provider = new GoogleAuthProvider();
-
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        console.log(result);
-      })
-      .catch((error) => {
         console.log(error);
       });
   };
@@ -83,43 +90,40 @@ function App() {
     setValue(value - 1);
   };
 
-  useEffect(() => {
-    if (value > 5) return;
-    const timer = setTimeout(() => {
-      setValue(value + 1);
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, [value]);
-
   return (
     <div className="App">
-      <div className="icons">
-        <p>value:{value}</p>
-        <PlusOutlined onClick={increment} />
-        <MinusSquareOutlined onClick={decrement} />
-        <div>
-          <Button onClick={onFinish}>SignUp With Google</Button>
-        </div>
-        <div>
-          <p>Mobile Number</p>
-          <div>
+      <Form onFinish={onFinish}>
+        <div className="icons">
+          <p>value:{value}</p>
+          <PlusOutlined onClick={increment} />
+          <MinusSquareOutlined onClick={decrement} />
+          <Form.Item>
+            <Button htmlType="submit">SignUp With Google</Button>
+          </Form.Item>
+          <Form.Item style={{userSelect:'none'}}>
+            <p>Mobile Number</p>
+            <div>
+              <Input
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+              />
+              <div id="recaptcha-container"></div> {/* Recaptcha container */}
+              <Button onClick={generateOtp}style={{userSelect:'none'}}>Generate OTP</Button>
+            </div>
+          </Form.Item>
+          <Form.Item style={{userSelect:'none'}}>
+            <p>Enter Your OTP</p>
             <Input
-              value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
+              type="text"
+              maxLength={6}
+              onChange={(e) => setCode(e.target.value)}
             />
-            <div id="recaptcha-container"></div> {/* Recaptcha container */}
-            <Button onClick={generateOtp}>Generate OTP</Button>
-          </div>
-          <p>Enter Your OTP</p>
-          <Input
-            type="text"
-            // value={verificationCode} //verification code displayed after verify the I'm not robot.
-            onChange={(e) => setCode(e.target.value)}
-          />
-          <Button onClick={handleSubmit}>Verify OTP</Button>
+          </Form.Item>
+          <Form.Item>
+            <Button onClick={handleSubmit}>Verify OTP</Button>
+          </Form.Item>
         </div>
-      </div>
+      </Form>
     </div>
   );
 }
