@@ -1,10 +1,9 @@
-const firebaseConfig = {
-  apiKey: "AIzaSyAdSHFRyh4hqTZEP3UZzYkU-h_E36IUeMc",
-  authDomain: "form-d74ae.firebaseapp.com",
-  projectId: "form-d74ae",
-  storageBucket: "form-d74ae.appspot.com",
-  messagingSenderId: "914943906971",
-  appId: "1:914943906971:web:4378e19b9ae509f3c2a23e",
-  measurementId: "G-LC7YEMSF66"
+export const firebaseConfig = {
+  apiKey: "AIzaSyDfO-PMboQZh96D2NDHmw3YaL1i_CE49eo",
+  authDomain: "login-auth-74e25.firebaseapp.com",
+  projectId: "login-auth-74e25",
+  storageBucket: "login-auth-74e25.appspot.com",
+  messagingSenderId: "557500544397",
+  appId: "1:557500544397:web:1753941cc5f7d0e088f9c4",
+  measurementId: "G-G0YM9ETG2H",
 };
-export default firebaseConfig;

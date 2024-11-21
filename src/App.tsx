@@ -11,8 +11,8 @@ import {
   signInWithPhoneNumber,
 } from "firebase/auth";
 
-import { Button, Form, Input, InputNumber } from "antd";
-import firebaseConfig from "./firebase";
+import { Button, Form, Input, message } from "antd";
+import { firebaseConfig } from "./firebase";
 
 // Initialize Firebase outside the component
 const firebaseApp = initializeApp(firebaseConfig);
@@ -28,12 +28,12 @@ function App() {
   );
   const [code, setCode] = useState<string | null>(null);
 
+  // Initialize RecaptchaVerifier when the component mounts
   useEffect(() => {
     if (value > 5) return;
     const timer = setTimeout(() => {
       setValue(value + 1);
     }, 2000);
-
     return () => clearTimeout(timer);
   }, [value]);
 
@@ -69,7 +69,6 @@ function App() {
       console.log(error);
     }
   }, [auth, phoneNumber, appVerifier]);
-
   const handleSubmit = async () => {
     console.log(code, confirmationResult);
     confirmationResult
@@ -100,7 +99,7 @@ function App() {
           <Form.Item>
             <Button htmlType="submit">SignUp With Google</Button>
           </Form.Item>
-          <Form.Item style={{userSelect:'none'}}>
+          <Form.Item style={{ userSelect: "none" }}>
             <p>Mobile Number</p>
             <div>
               <Input
@@ -108,10 +107,12 @@ function App() {
                 onChange={(e) => setPhoneNumber(e.target.value)}
               />
               <div id="recaptcha-container"></div> {/* Recaptcha container */}
-              <Button onClick={generateOtp}style={{userSelect:'none'}}>Generate OTP</Button>
+              <Button onClick={generateOtp} style={{ userSelect: "none" }}>
+                Generate OTP
+              </Button>
             </div>
           </Form.Item>
-          <Form.Item style={{userSelect:'none'}}>
+          <Form.Item style={{ userSelect: "none" }}>
             <p>Enter Your OTP</p>
             <Input
               type="text"
