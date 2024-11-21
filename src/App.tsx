@@ -14,7 +14,6 @@ import {
 import { Button, Form, Input, message } from "antd";
 import { firebaseConfig } from "./firebase";
 
-// Initialize Firebase outside the component
 const firebaseApp = initializeApp(firebaseConfig);
 const auth = getAuth(firebaseApp);
 const db = getFirestore(firebaseApp);
@@ -28,7 +27,6 @@ function App() {
   );
   const [code, setCode] = useState<string | null>(null);
 
-  // Initialize RecaptchaVerifier when the component mounts
   useEffect(() => {
     if (value > 5) return;
     const timer = setTimeout(() => {
